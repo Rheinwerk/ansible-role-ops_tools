@@ -19,6 +19,8 @@ Role Variables
 
 - sysdig
 
+- atop
+
 If sysdig is part of the tools list, the corresponding Draios repository is automatically added.
 
 Dependencies
