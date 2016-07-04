@@ -5,6 +5,7 @@ galaxy_info:
   company: Rheinwerk
   license: GPL
   min_ansible_version: 1.9
+  dependencies: []
   platforms:
   - name: Ubuntu
   galaxy_tags:
