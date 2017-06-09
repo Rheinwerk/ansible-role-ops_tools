@@ -1,6 +1,10 @@
 ---
 
 _ops_tools:
+  apt_repos:
+    - key_url: "https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public"
+      repo_line: "deb http://download.draios.com/stable/deb stable-$(ARCH)/"
+    # - ppa: "ppa:.../..."
   tools:
     - iotop
     - sysstat

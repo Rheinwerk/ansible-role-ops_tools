@@ -21,7 +21,7 @@ Role Variables
 
 - atop
 
-If sysdig is part of the tools list, the corresponding Draios repository is automatically added.
+`_ops_tools.apt_repos` is an optional list of repositories, optionally with Signing Keys, to be added before the actual installation of packages.
 
 Dependencies
 ------------
@@ -35,6 +35,9 @@ Example Playbook
     - hosts: servers
       vars:
         OPS_TOOLS:
+          apt_repos:
+            - key_url: "https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public"
+              repo_line: "deb http://download.draios.com/stable/deb stable-$(ARCH)/"
           tools:
             - sysstat
             - iotop

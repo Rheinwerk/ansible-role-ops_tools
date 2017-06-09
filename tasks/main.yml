@@ -10,21 +10,30 @@
 ## Ubuntu
 
 - block:
-  - name: Add Sysdig Repository Key
-    apt_key: url=https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public state=present
-    when: '"sysdig" in _ops_tools.tools'
+  - name: Add Repository Key URL
+    apt_key: url="{{ item.key_url }}" state=present
+    when: item.key_url is defined
+    with_items: "{{ _ops_tools.apt_repos }}"
+    register: new_keys
 
-  - name: Add Sysdig Repositories
-    get_url: url=http://download.draios.com/stable/deb/draios.list dest=/etc/apt/sources.list.d/draios.list mode=0440
-    register: add_sysdig_repo
-    when: '"sysdig" in _ops_tools.tools'
+  - name: Add Repositories URL
+    apt_repository: repo="{{ item.repo_line }}" state=present update_cache=no
+    when: item.repo_line is defined
+    with_items: "{{ _ops_tools.apt_repos }}"
+    register: new_repos
+
+  - name: Add Repositories PPA
+    apt_repository: repo="{{ item.ppa }}" state=present update_cache=no
+    when: item.ppa is defined
+    with_items: "{{ _ops_tools.apt_repos }}"
+    register: new_ppas
 
   - name: Update APT Cache
     apt: update_cache=yes
-    when: '"sysdig" in _ops_tools.tools and add_sysdig_repo|changed'
+    when: new_keys|changed or new_repos|changed or new_ppas|changed
 
   - name: Install Ops Tools
-    apt: name={{ item }} state=present
+    apt: name="{{ item }}" state=present
     with_items: "{{ _ops_tools.tools }}"
 
   when: "{{ ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian' }}"
