@@ -1,11 +1,11 @@
+# vim: ft=ansible et ts=2
 ---
 # tasks file for ops_tools
 
 - name: Copy Ops Tools
-  copy: src={{ item }} dest=/{{ item }} owner=root group=root mode=0755
+  copy: src="{{ item }}" dest="/{{ item }}" owner=root group=root mode=0755
   with_items:
-    - usr/local/bin/usereport.py
-
+    - "usr/local/bin/usereport.py"
 
 ## Ubuntu
 
@@ -36,7 +36,7 @@
     apt: name="{{ item }}" state=present
     with_items: "{{ _ops_tools.tools }}"
 
-  when: "{{ ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian' }}"
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
 
 
 ## ipkg
@@ -53,5 +53,5 @@
     with_items: "{{ _ops_tools.tools }}"
     when: ipkg|success
 
-  when: "{{  ansible_cmdline.syno_hw_version is defined }}"
+  when: ansible_cmdline.syno_hw_version is defined
 
