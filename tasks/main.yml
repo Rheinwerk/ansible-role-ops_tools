@@ -10,11 +10,17 @@
 ## Ubuntu
 
 - block:
-  - name: Add Repository Key URL
+  - name: Add Repository Key by URL
     apt_key: url="{{ item.key_url }}" state=present
     when: item.key_url is defined
     with_items: "{{ _ops_tools.apt_repos }}"
-    register: new_keys
+    register: new_keys_by_url
+
+  - name: Add Repository Key by ID
+    apt_key: id="{{ item.key_id }}" keyserver="{{ item.key_server | default('keyserver.ubuntu.com')  }}" state=present
+    when: item.key_id is defined
+    with_items: "{{ _ops_tools.apt_repos }}"
+    register: new_keys_by_id
 
   - name: Add Repositories URL
     apt_repository: repo="{{ item.repo_line }}" state=present update_cache=no
@@ -30,7 +36,7 @@
 
   - name: Update APT Cache
     apt: update_cache=yes
-    when: new_keys|changed or new_repos|changed or new_ppas|changed
+    when: new_keys_by_url|changed or new_keys_by_id|changed or new_repos|changed or new_ppas|changed
 
   - name: Install Ops Tools
     apt: name="{{ item }}" state=present
