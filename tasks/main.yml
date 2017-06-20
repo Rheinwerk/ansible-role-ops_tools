@@ -11,7 +11,7 @@
 
 - block:
   - name: Add Repository Key by URL
-    apt_key: url="{{ item.key_url }}" state=present
+    apt_key: url="{{ item.key_url }}" id="{{ item.key_id|default(omit) }}" state=present
     when: item.key_url is defined
     with_items: "{{ _ops_tools.apt_repos }}"
     register: new_keys_by_url
