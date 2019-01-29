@@ -10,53 +10,52 @@
 ## Ubuntu
 
 - block:
-  - name: Add Repository Key by URL
-    apt_key: url="{{ item.key_url }}" id="{{ item.key_id|default(omit) }}" state=present
-    when: item.key_url is defined
-    with_items: "{{ _ops_tools.apt_repos|default([]) }}"
-    register: new_keys_by_url
+    - name: Add Repository Key by URL
+      apt_key: url="{{ item.key_url }}" id="{{ item.key_id|default(omit) }}" state=present
+      when: item.key_url is defined
+      with_items: "{{ _ops_tools.apt_repos|default([]) }}"
+      register: new_keys_by_url
 
-  - name: Add Repository Key by ID
-    apt_key: id="{{ item.key_id }}" keyserver="{{ item.key_server | default('keyserver.ubuntu.com')  }}" state=present
-    when: item.key_id is defined
-    with_items: "{{ _ops_tools.apt_repos|default([]) }}"
-    register: new_keys_by_id
+    - name: Add Repository Key by ID
+      apt_key: id="{{ item.key_id }}" keyserver="{{ item.key_server | default('keyserver.ubuntu.com')  }}" state=present
+      when: item.key_id is defined
+      with_items: "{{ _ops_tools.apt_repos|default([]) }}"
+      register: new_keys_by_id
 
-  - name: Add Repositories URL
-    apt_repository: repo="{{ item.repo_line }}" state=present update_cache=no
-    when: item.repo_line is defined
-    with_items: "{{ _ops_tools.apt_repos|default([]) }}"
-    register: new_repos
+    - name: Add Repositories URL
+      apt_repository: repo="{{ item.repo_line }}" state=present update_cache=no
+      when: item.repo_line is defined
+      with_items: "{{ _ops_tools.apt_repos|default([]) }}"
+      register: new_repos
 
-  - name: Add Repositories PPA
-    apt_repository: repo="{{ item.ppa }}" state=present update_cache=no
-    when: item.ppa is defined
-    with_items: "{{ _ops_tools.apt_repos|default([]) }}"
-    register: new_ppas
+    - name: Add Repositories PPA
+      apt_repository: repo="{{ item.ppa }}" state=present update_cache=no
+      when: item.ppa is defined
+      with_items: "{{ _ops_tools.apt_repos|default([]) }}"
+      register: new_ppas
 
-  - name: Update APT Cache
-    apt: update_cache=yes
-    when: new_keys_by_url|changed or new_keys_by_id|changed or new_repos|changed or new_ppas|changed
+    - name: Update APT Cache
+      apt: update_cache=yes
+      when: new_keys_by_url is changed or new_keys_by_id is changed or new_repos is changed or new_ppas is changed
 
-  - name: Install Ops Tools
-    apt: name="{{ item }}" state=present
-    with_items: "{{ _ops_tools.tools }}"
-
+    - name: Install Ops Tools
+      apt:
+        state: present
+        name: "{{ _ops_tools.tools }}"
   when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
 
 
 ## ipkg
 
 - block:
-  - name: Check if ipkg is installed
-    command: /opt/bin/ipkg --version
-    register: ipkg
-    check_mode: false
-    failed_when: ipkg|failed
+    - name: Check if ipkg is installed
+      command: /opt/bin/ipkg --version
+      register: ipkg
+      check_mode: false
+      failed_when: ipkg is failed
 
-  - name: Install Ops Tools
-    command: /opt/bin/ipkg install {{ item }}
-    with_items: "{{ _ops_tools.tools }}"
-    when: ipkg|success
-
+    - name: Install Ops Tools
+      command: /opt/bin/ipkg install {{ item }}
+      with_items: "{{ _ops_tools.tools }}"
+      when: ipkg is success
   when: ansible_cmdline.syno_hw_version is defined
