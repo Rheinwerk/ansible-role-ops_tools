@@ -4,6 +4,12 @@ _ops_tools:
   apt_repos:
     - key_url: "https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public"
       repo_line: "deb http://download.draios.com/stable/deb stable-$(ARCH)/"
+    # credentials:
+    #   base_name: "draios"
+    #   machine: "download.draios.com"
+    #   login: "username"
+    #   password: "<password or empty string>"
+
     # - ppa: "ppa:.../..."
     # - key_id: abc321
     #   keyserver="keyserver.ubuntu.com"

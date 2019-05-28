@@ -10,6 +10,17 @@
 ## Ubuntu
 
 - block:
+    - name: Add Repository Credentials
+      copy:
+        content: "machine {{ item.credentials.machine }} login {{ item.credentials.login }} password {{ item.credentials.password }}"
+        dest: "/etc/apt/auth.conf.d/{{ item.credentials.base_name }}.conf"
+        mode: "0640"
+        owner: root
+        group: root
+      when: item.credentials is defined
+      with_items: "{{ _ops_tools.apt_repos|default([]) }}"
+      register: new_credentials
+
     - name: Add Repository Key by URL
       apt_key: url="{{ item.key_url }}" id="{{ item.key_id|default(omit) }}" state=present
       when: item.key_url is defined
@@ -36,7 +47,7 @@
 
     - name: Update APT Cache
       apt: update_cache=yes
-      when: new_keys_by_url is changed or new_keys_by_id is changed or new_repos is changed or new_ppas is changed
+      when: new_keys_by_url is changed or new_keys_by_id is changed or new_repos is changed or new_ppas is changed or new_credentials is changed
 
     - name: Install Ops Tools
       apt:
