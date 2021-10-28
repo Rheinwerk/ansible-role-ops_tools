@@ -1,6 +1,6 @@
 ops_tools
 =========
-[![Build Status](https://travis-ci.org/Rheinwerk/ansible-role-ops_tools.svg?branch=master)](https://travis-ci.org/Rheinwerk/ansible-role-ops_tools)
+[![Build Status](https://github.com/Rheinwerk/ansible-role-ops_tools/actions/workflows/ci.yml/badge.svg)](https://github.com/Rheinwerk/ansible-role-ops_tools/actions/workflows/ci.yml)
 
 Installs tools useful for ops analysis and problem diagnosis.
 
