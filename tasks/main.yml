@@ -15,6 +15,7 @@
 ## Ubuntu
 
 - name: Debian OS family tasks
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
   block:
     - name: Add Repository Credentials
       copy:
@@ -72,12 +73,10 @@
       apt:
         state: present
         name: "{{ _ops_tools.tools }}"
-  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
-
 
 ## ipkg
-
 - name: IPKG tasks
+  when: ansible_cmdline.syno_hw_version is defined
   block:
     - name: Check if ipkg is installed
       command: /opt/bin/ipkg --version
@@ -90,4 +89,3 @@
       command: /opt/bin/ipkg install {{ item }}
       with_items: "{{ _ops_tools.tools }}"
       when: ipkg is success
-  when: ansible_cmdline.syno_hw_version is defined
