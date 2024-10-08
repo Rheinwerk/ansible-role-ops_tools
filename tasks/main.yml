@@ -20,7 +20,6 @@
     signed_by: "{{ item.signed_by }}"
   when: item.name is defined
   with_items: "{{ _ops_tools.deb822_repository | default([]) }}"
-  register: new_deb822
 
 - name: Install Packages
   ansible.builtin.apt:
