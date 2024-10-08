@@ -1,7 +1,5 @@
 # vim: ft=ansible et ts=2
 ---
-# tasks file for ops_tools
-
 - name: Add Repository Credentials
   ansible.builtin.copy:
     content: "machine {{ item.machine }} login {{ item.login }} password {{ item.password }}"
@@ -12,42 +10,6 @@
   when: item.login is defined
   with_items: "{{ _ops_tools.credentials | default([]) }}"
   register: new_credentials
-
-- name: Add Repository Key by URL
-  ansible.builtin.apt_key:
-    url: "{{ item.key_url }}"
-    id: "{{ item.key_id | default(omit) }}"
-    state: present
-  when: item.key_url is defined
-  with_items: "{{ _ops_tools.apt_repos | default([]) }}"
-  register: new_keys_by_url
-
-- name: Add Repository Key by ID
-  ansible.builtin.apt_key:
-    id: "{{ item.key_id }}"
-    keyserver: "{{ item.key_server | default('keyserver.ubuntu.com') }}"
-    state: present
-  when: item.key_id is defined
-  with_items: "{{ _ops_tools.apt_repos | default([]) }}"
-  register: new_keys_by_id
-
-- name: Add Repositories URL
-  ansible.builtin.apt_repository:
-    repo: "{{ item.repo_line }}"
-    state: present
-    update_cache: no
-  when: item.repo_line is defined
-  with_items: "{{ _ops_tools.apt_repos | default([]) }}"
-  register: new_repos
-
-- name: Add Repositories PPA
-  ansible.builtin.apt_repository:
-    repo: "{{ item.ppa }}"
-    state: present
-    update_cache: no
-  when: item.ppa is defined
-  with_items: "{{ _ops_tools.apt_repos | default([]) }}"
-  register: new_ppas
 
 - name: Add Deb822 Repo
   ansible.builtin.deb822_repository:
@@ -61,12 +23,8 @@
   with_items: "{{ _ops_tools.deb822_repository | default([]) }}"
   register: new_deb822
 
-- name: Update APT Cache # noqa: no-handler
-  ansible.builtin.apt:
-    update_cache: yes
-  when: new_keys_by_url is changed or new_keys_by_id is changed or new_repos is changed or new_ppas is changed or new_deb822 is changed or new_credentials is changed
-
-- name: Install Ops Tools
+- name: Install Packages
   ansible.builtin.apt:
     state: present
-    name: "{{ _ops_tools.tools }}"
+    name: "{{ _ops_tools.packages }}"
+    update_cache: true
