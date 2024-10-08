@@ -36,9 +36,6 @@ Example Playbook
     - hosts: servers
       vars:
         OPS_TOOLS:
-          apt_repos:
-            - key_url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
-              repo_line: 'deb https://artifacts.elastic.co/packages/8.x/apt stable main'
           deb822_repository:
             - name: elastic
               types: deb
