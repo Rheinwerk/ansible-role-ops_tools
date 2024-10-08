@@ -1,18 +1,24 @@
 ---
 
 _ops_tools:
+  # credentials:
+  #   base_name: "draios"
+  #   machine: "download.draios.com"
+  #   login: "username"
+  #   password: "<password or empty string>"
   apt_repos:
-    - key_url: "https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public"
-      repo_line: "deb http://download.draios.com/stable/deb stable-$(ARCH)/"
-    # credentials:
-    #   base_name: "draios"
-    #   machine: "download.draios.com"
-    #   login: "username"
-    #   password: "<password or empty string>"
-
+    - key_url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      repo_line: 'deb https://artifacts.elastic.co/packages/8.x/apt stable main'
     # - ppa: "ppa:.../..."
     # - key_id: abc321
     #   keyserver="keyserver.ubuntu.com"
+  # deb822_repository:
+  #   - name: elastic
+  #     types: deb
+  #     uris: https://artifacts.elastic.co/packages/8.x/apt
+  #     suites: stable
+  #     components: main
+  #     signed_by: https://artifacts.elastic.co/GPG-KEY-elasticsearch
   tools:
     - iotop
     - sysstat

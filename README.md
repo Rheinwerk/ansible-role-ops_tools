@@ -37,8 +37,15 @@ Example Playbook
       vars:
         OPS_TOOLS:
           apt_repos:
-            - key_url: "https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public"
-              repo_line: "deb http://download.draios.com/stable/deb stable-$(ARCH)/"
+            - key_url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+              repo_line: 'deb https://artifacts.elastic.co/packages/8.x/apt stable main'
+          deb822_repository:
+            - name: elastic
+              types: deb
+              uris: https://artifacts.elastic.co/packages/8.x/apt
+              suites: stable
+              components: main
+              signed_by: https://artifacts.elastic.co/GPG-KEY-elasticsearch
           tools:
             - sysstat
             - iotop
