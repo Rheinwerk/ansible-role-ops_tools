@@ -4,13 +4,13 @@
 
 - name: Add Repository Credentials
   ansible.builtin.copy:
-    content: "machine {{ item.credentials.machine }} login {{ item.credentials.login }} password {{ item.credentials.password }}"
-    dest: "/etc/apt/auth.conf.d/{{ item.credentials.base_name }}.conf"
+    content: "machine {{ item.machine }} login {{ item.login }} password {{ item.password }}"
+    dest: "/etc/apt/auth.conf.d/{{ item.base_name }}.conf"
     mode: "0640"
     owner: root
     group: root
-  when: item.credentials is defined
-  with_items: "{{ _ops_tools.apt_repos | default([]) }}"
+  when: item.login is defined
+  with_items: "{{ _ops_tools.credentials | default([]) }}"
   register: new_credentials
 
 - name: Add Repository Key by URL
