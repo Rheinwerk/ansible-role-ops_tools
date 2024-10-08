@@ -63,19 +63,3 @@
       ansible.builtin.apt:
         state: present
         name: "{{ _ops_tools.tools }}"
-
-## ipkg
-- name: IPKG tasks
-  when: ansible_cmdline.syno_hw_version is defined
-  block:
-    - name: Check if ipkg is installed
-      ansible.builtin.command: /opt/bin/ipkg --version
-      register: ipkg
-      check_mode: false
-      changed_when: false
-      failed_when: ipkg is failed
-
-    - name: Install Ops Tools
-      ansible.builtin.command: /opt/bin/ipkg install {{ item }}
-      with_items: "{{ _ops_tools.tools }}"
-      when: ipkg is success
