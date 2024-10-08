@@ -49,10 +49,22 @@
   with_items: "{{ _ops_tools.apt_repos | default([]) }}"
   register: new_ppas
 
+- name: Add Deb822 Repo
+  ansible.builtin.deb822_repository:
+    name: "{{ item.name }}"
+    types: deb
+    uris: "{{ item.uris }}"
+    suites: "{{ item.suites }}"
+    components: "{{ item.components }}"
+    signed_by: "{{ item.signed_by }}"
+  when: item.name is defined
+  with_items: "{{ _ops_tools.deb822_repository | default([]) }}"
+  register: new_deb822
+
 - name: Update APT Cache # noqa: no-handler
   ansible.builtin.apt:
     update_cache: yes
-  when: new_keys_by_url is changed or new_keys_by_id is changed or new_repos is changed or new_ppas is changed or new_credentials is changed
+  when: new_keys_by_url is changed or new_keys_by_id is changed or new_repos is changed or new_ppas is changed or new_deb822 is changed or new_credentials is changed
 
 - name: Install Ops Tools
   ansible.builtin.apt:
