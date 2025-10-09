@@ -1,7 +1,6 @@
 ---
 galaxy_info:
-  author: Lukas Pustina
-  namespace: rheinwerk
+  author: rheinwerk
   role_name: ops_tools
   description: Installs tools useful for ops analysis and problem diagnosis.
   company: Rheinwerk
