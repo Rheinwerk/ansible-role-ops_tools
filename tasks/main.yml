@@ -8,7 +8,7 @@
     dest: "/{{ item }}"
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   with_items:
     - "usr/local/bin/usereport.py"
 
@@ -85,7 +85,8 @@
       changed_when: false
       failed_when: ipkg is failed
 
-    - name: Install Ops Tools
+    # FIXME: https://ansible.readthedocs.io/projects/lint/rules/no-changed-when/
+    - name: Install Ops Tools # noqa no-changed-when
       ansible.builtin.command: /opt/bin/ipkg install {{ item }}
       with_items: "{{ _ops_tools.tools }}"
       when: ipkg is success
